@@ -1,0 +1,94 @@
+#include<bits\stdc++.h>
+using namespace std;
+
+
+template<class K, class V>
+class unorderedMap{
+    private:
+        int unique;
+        vector<pair<K,V>>* arr;
+        int size;
+        hash<K> myHashFunction;
+
+    public:
+        //CONSTRUCTOR
+        unorderedMap(){
+            unique = 0;
+            size = 2;
+            arr = new vector<pair<K,V>>[size];
+        }
+
+    // GETTING HASH
+    int getHash(K key){
+        return myHashFunction(key);
+    }
+    // SAME KEY CONDITION
+    bool find(K key){
+        int index = (getHash(key))%size;
+            for(pair<K,V> p:arr[index]){
+                if(p.first== key){
+                    return true;
+                }
+
+            }
+            return false;
+    }
+
+    // REHASHING
+    void reHash(){
+        vector<pair<K,V>>* temp = new vector<pair<K,V>>[size*2];
+        swap(arr, temp);
+        size = size*2;
+        unique = 0;
+        for(int i=0 ; i<size/2; i++){
+            for(pair<K,V> p:temp[i]){
+                insert(p.first, p.second);
+            }
+        }
+    }
+
+    // INSERTING AND UPDATING
+    void insert(K key , V value){
+        int index = (getHash(key))%size;
+        if(find(key)){
+            for(pair<K,V> p:arr[index]){
+                if(p.first== key){
+                    cout<<"heyy";
+                    p.second= value;
+                }
+            }
+        }else{
+            arr[index].push_back({key,value});
+            unique++;
+        }if(unique*1.0f/size >= 2){
+            reHash();
+        }
+    }
+
+    //DISPLAY
+    void display(){
+        for(int i=0 ; i<size ; i++){
+            for(pair<K,V> p:arr[i]){
+                cout<<p.first<<" : "<<p.second<<"--> ";
+            }
+            cout<<"\n";
+        }
+        cout<<"\n";
+    }
+
+};
+
+int main(){
+    unorderedMap<int , string> record;
+    record.insert(7, "raveet");
+    record.insert(16, "glory");
+    record.insert(9, "utsavi");
+    record.insert(19, "utkarsh");
+    record.insert(9, "krish");
+    record.insert(2, "shivani");
+    record.insert(26, "mansi");
+    record.insert(8, "priya");
+    record.display();
+
+    return 0;
+}
